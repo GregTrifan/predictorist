@@ -43,9 +43,14 @@ const Token = () => {
   const address = useParams().address;
   async function fetchPrediction() {
     const res = fetch(
-      `http://app-env.eba-hxn3i6de.us-east-2.elasticbeanstalk.com/?f=10&q=%7Btoken%20(id:%22${address}%22)%7BtokenDayData%7BpriceUSD%20date%7D%7D%7D`
+      `http://app-env.eba-hxn3i6de.us-east-2.elasticbeanstalk.com/?f=10&q=%7Btoken%20(id:%220xde30da39c46104798bb5aa3fe8b9e0e1f348163f%22)%7BtokenDayData%7BpriceUSD%20date%7D%7D%7D`,
+      {
+        mode: "cors",
+        method: "GET",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      }
     );
-    console.log(res);
+    console.log((await res).body);
   }
   useEffect(() => {
     fetchPrediction();
