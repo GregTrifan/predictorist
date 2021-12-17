@@ -7,14 +7,25 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { AiOutlineSearch } from "react-icons/ai";
-
-import React from "react";
+import "@fontsource/luxurious-script";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const [tokenAddress, setTokenAddress] = useState();
   return (
     <chakra.header w="full" px={{ base: 2, sm: 4 }} py={4} shadow="md">
       <Flex alignItems="center" justifyContent="space-between" mx="auto">
-        <chakra.a href="/" title="Home Page" display="flex" alignItems="center">
+        <chakra.a
+          href="/"
+          fontSize="34"
+          fontWeight="md"
+          title="Home Page"
+          fontFamily="Luxurious Script"
+          display="flex"
+          alignItems="center"
+        >
           Predictorist
         </chakra.a>
 
@@ -24,7 +35,17 @@ const Navbar = () => {
               pointerEvents="none"
               children={<AiOutlineSearch />}
             />
-            <Input type="tel" placeholder="Search..." />
+            <Input
+              rounded="lg"
+              type="text"
+              onKeyUp={(e) => {
+                if (e.key === "Enter") {
+                  if (tokenAddress !== "") navigate(`/token/${tokenAddress}`);
+                }
+              }}
+              onChange={(e) => setTokenAddress(e.target.value)}
+              placeholder="Search ERC20 Contract"
+            />
           </InputGroup>
         </HStack>
       </Flex>

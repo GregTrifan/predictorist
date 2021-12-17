@@ -24,7 +24,8 @@ const Token = () => {
   `;
 
   const [predictions, setPredictions] = useState();
-  const { loading, error, data } = useQuery(TOKEN_NAME, {
+  const [tokenLogo, setTokenLogo] = useState();
+  const { data } = useQuery(TOKEN_NAME, {
     variables: { address },
   });
   async function fetchPrediction() {
@@ -44,21 +45,34 @@ const Token = () => {
           time: moment(time).format("hh:mm:ss"),
         };
       });
+
+      const tokenRes = await fetch(
+        `https://api.ethplorer.io/getTokenInfo/${address}?apiKey=${process.env.REACT_APP_ETHPLORER_KEY}`
+      );
+
+      const tokenInfo = await tokenRes.json();
+      const logo = tokenInfo.image;
+
+      setTokenLogo(`https://ethplorer.io${logo}`);
+
       setPredictions(fetchedPredictions);
     } catch {
       console.log("not available");
     }
   }
   useEffect(() => {
-    fetchPrediction();
+    if (address.match(/^0x[a-fA-F0-9]{40}$/)) fetchPrediction();
   });
   if (address.match(/^0x[a-fA-F0-9]{40}$/))
     return (
       <Box p="2">
-        <Heading textAlign="center">
-          {data && `${data.token.name} (${data.token.symbol})`}
-        </Heading>
-
+        {data && (
+          <Heading textAlign="center" mt="4" mb="2">
+            {tokenLogo && <Avatar mx="2" src={tokenLogo} />}
+            {!tokenLogo && <Avatar mx="2" name={data.token.symbol} />}
+            {`${data.token.name} (${data.token.symbol})`}
+          </Heading>
+        )}
         {predictions && (
           <Center>
             <Box rounded="md" bgColor="gray.200" p="2" my="10">

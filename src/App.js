@@ -1,4 +1,3 @@
-import "./App.css";
 import { ChakraProvider } from "@chakra-ui/react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/home";
@@ -14,8 +13,8 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <ChakraProvider>
-        <Navbar />
         <BrowserRouter>
+          <Navbar />
           <Routes>
             <Route path="/">
               <Route index element={<Home />} />
