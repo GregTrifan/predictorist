@@ -10,11 +10,6 @@ const topTokens = [
     logo: "https://assets.coingecko.com/coins/images/12504/small/uniswap-uni.png?1600306604",
   },
   {
-    name: "WETH",
-    address: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-    logo: "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
-  },
-  {
     name: "GTC",
     address: "0xde30da39c46104798bb5aa3fe8b9e0e1f348163f",
     logo: "https://assets.coingecko.com/coins/images/15810/small/gitcoin.png?1621992929",
