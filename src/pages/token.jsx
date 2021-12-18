@@ -1,14 +1,7 @@
-import { Box, Heading, Center, Text, Avatar } from "@chakra-ui/react";
+import { Box, Heading, Text, Avatar } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import {
-  AreaChart,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Area,
-} from "recharts";
+import Chart from "react-apexcharts";
 import NotFound from "./notFound";
 import moment from "moment";
 import { gql, useQuery } from "@apollo/client";
@@ -35,12 +28,10 @@ const Token = () => {
       );
       const info = await (await res).json();
       const fetchedPredictions = info.predictions.map((prediction, i) => {
-        const time = new Date(
-          Number(info.last_date) * 1000 + Number(info.timestep) * (i + 1)
-        );
+        const time = new Date(Date.now() + Number(info.timestep) * (i + 1));
 
         return {
-          price: prediction,
+          price: prediction.toFixed(4),
           timestamp: time.getTime(),
           time: moment(time).format("hh:mm:ss"),
         };
@@ -62,7 +53,7 @@ const Token = () => {
   }
   useEffect(() => {
     if (address.match(/^0x[a-fA-F0-9]{40}$/)) fetchPrediction();
-  });
+  }, []);
   if (address.match(/^0x[a-fA-F0-9]{40}$/))
     return (
       <Box p="2">
@@ -74,57 +65,35 @@ const Token = () => {
           </Heading>
         )}
         {predictions && (
-          <Center>
-            <Box rounded="md" bgColor="gray.200" p="2" my="10">
-              <Text textAlign="center" fontWeight="bold">
-                Predictions
-              </Text>
-              <Box>
-                <Box display={{ base: "inline-flex", md: "none" }}>
-                  <AreaChart width={320} height={200} data={predictions}>
-                    <Area
-                      stroke="#8884d8"
-                      fill="#8884d8"
-                      type="monotone"
-                      dataKey="price"
-                    />
-                    <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-                    <XAxis dataKey="time" />
-                    <YAxis />
-                    <Tooltip />
-                  </AreaChart>
-                </Box>
-                <Box display={{ base: "none", md: "inline-flex", lg: "none" }}>
-                  <AreaChart width={500} height={300} data={predictions}>
-                    <Area
-                      stroke="#8884d8"
-                      fill="#8884d8"
-                      type="monotone"
-                      dataKey="price"
-                    />
-                    <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-                    <XAxis dataKey="time" />
-                    <YAxis />
-                    <Tooltip />
-                  </AreaChart>
-                </Box>
-                <Box display={{ base: "none", lg: "inline-flex" }}>
-                  <AreaChart width={800} height={400} data={predictions}>
-                    <Area
-                      stroke="#8884d8"
-                      fill="#8884d8"
-                      type="monotone"
-                      dataKey="price"
-                    />
-                    <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-                    <XAxis dataKey="time" />
-                    <YAxis />
-                    <Tooltip />
-                  </AreaChart>
-                </Box>
-              </Box>
-            </Box>
-          </Center>
+          <Box
+            mx="auto"
+            rounded="md"
+            maxW="1000px"
+            bgColor="gray.200"
+            p="3"
+            my="10"
+          >
+            <Text textAlign="center" fontWeight="bold">
+              Predictions
+            </Text>
+            <Chart
+              options={{
+                chart: {
+                  id: "prediction-chart",
+                },
+                xaxis: {
+                  categories: predictions.map((p) => p.time),
+                },
+              }}
+              series={[
+                {
+                  name: "prediction",
+                  data: predictions.map((p) => p.price),
+                },
+              ]}
+              type="area"
+            />
+          </Box>
         )}
       </Box>
     );
