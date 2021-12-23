@@ -1,4 +1,11 @@
-import { Box, Heading, Text, Avatar } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  Text,
+  Avatar,
+  Center,
+  CircularProgress,
+} from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Chart from "react-apexcharts";
@@ -17,7 +24,7 @@ const Token = () => {
   `;
 
   const [predictions, setPredictions] = useState();
-  const { data } = useQuery(TOKEN_NAME, {
+  const { data, error } = useQuery(TOKEN_NAME, {
     variables: { address },
   });
   async function fetchPrediction() {
@@ -45,6 +52,19 @@ const Token = () => {
     if (address.match(/^0x[a-fA-F0-9]{40}$/)) fetchPrediction();
   }, []);
   if (address.match(/^0x[a-fA-F0-9]{40}$/))
+    if (!data)
+      return (
+        <Center mt="20">
+          <CircularProgress
+            isIndeterminate
+            thickness="6px"
+            speed="0.65s"
+            color="blue.500"
+            size="200"
+          />
+        </Center>
+      );
+  if (data.token)
     return (
       <Box p="2">
         {data && (
@@ -58,7 +78,7 @@ const Token = () => {
             {`${data.token.name} (${data.token.symbol})`}
           </Heading>
         )}
-        {predictions && (
+        {data && predictions && (
           <Box
             mx="auto"
             rounded="md"
