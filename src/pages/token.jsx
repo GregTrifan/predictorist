@@ -17,7 +17,6 @@ const Token = () => {
   `;
 
   const [predictions, setPredictions] = useState();
-  const [tokenLogo, setTokenLogo] = useState();
   const { data } = useQuery(TOKEN_NAME, {
     variables: { address },
   });
@@ -37,15 +36,6 @@ const Token = () => {
         };
       });
 
-      const tokenRes = await fetch(
-        `https://api.ethplorer.io/getTokenInfo/${address}?apiKey=${process.env.REACT_APP_ETHPLORER_KEY}`
-      );
-
-      const tokenInfo = await tokenRes.json();
-      const logo = tokenInfo.image;
-
-      setTokenLogo(`https://ethplorer.io${logo}`);
-
       setPredictions(fetchedPredictions);
     } catch {
       console.log("not available");
@@ -59,8 +49,12 @@ const Token = () => {
       <Box p="2">
         {data && (
           <Heading textAlign="center" mt="4" mb="2">
-            {tokenLogo && <Avatar mx="2" src={tokenLogo} />}
-            {!tokenLogo && <Avatar mx="2" name={data.token.symbol} />}
+            <Avatar
+              mx="2"
+              src={`https://tokens.1inch.io/${address}.png`}
+              name={data.token.symbol}
+            />
+
             {`${data.token.name} (${data.token.symbol})`}
           </Heading>
         )}
