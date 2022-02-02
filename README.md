@@ -1,4 +1,4 @@
 # Predictorist
 **⚠️ Deprecated repo  ⚠️**
 
-The whole app can be found now found [here](https://github.com/dspytdao/predictorist)
+The whole project can be found now found [here](https://github.com/dspytdao/predictorist)
